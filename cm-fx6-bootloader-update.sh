@@ -16,7 +16,7 @@
 # GNU General Public License for more details.
 
 UPDATER_VERSION="2.3-devel"
-UPDATER_VERSION_DATE="Aug 27 2015"
+UPDATER_VERSION_DATE="Sep 22 2015"
 UPDATER_BANNER="CompuLab CM-FX6 (Utilite) boot loader update utility ${UPDATER_VERSION} (${UPDATER_VERSION_DATE})"
 
 NORMAL="\033[0m"
@@ -125,7 +125,7 @@ function check_spi_flash() {
 
 function get_uboot_version() {
 	local file="$1"
-	grep -oaE "U-Boot [0-9]+\.[0-9]+.* \(... +[0-9]+ [0-9]+ - [0-9]+:[0-9]+:[0-9]+\)" "$file"
+	grep -oaE "U-Boot [0-9]+\.[0-9]+.* \(... +[0-9]+ [0-9]+ - [0-9]+:[0-9]+:[0-9]+.*\)" "$file"
 }
 
 function check_bootloader_versions() {
