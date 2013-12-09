@@ -160,7 +160,7 @@ function check_spi_flash() {
 
 function get_uboot_version() {
 	local file="$1"
-	grep -azE "U-Boot [0-9]+\.[0-9]+-cm-fx6-[0-9]+" $file
+	grep -oazE "U-Boot [0-9]+\.[0-9]+.* \(... +[0-9]+ [0-9]+ - [0-9]+:[0-9]+:[0-9]+\)" "$file"
 }
 
 function check_bootloader_versions() {
