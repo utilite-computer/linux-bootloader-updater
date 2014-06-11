@@ -56,83 +56,17 @@ function DD() {
 	return $?
 }
 
-EEPROM_DEV="/sys/bus/i2c/devices/2-0050/eeprom"
 MTD_DEV="mtd0"
 MTD_DEV_FILE="/dev/${MTD_DEV}"
 CPU_NAME=""
 DRAM_NAME=""
-BOOTLOADER_FILE=""
+BOOTLOADER_FILE="cm-fx6-firmware"
 
-function get_cpu() {
-	local cpu=`hexdump -C $EEPROM_DEV | grep 00000090 | sed 's/.*|\(C1[02DQM]*\)-.*/\1/g'`
-	local cpu_base="mx6"
-	local cpu_var=""
-	local cpu_type=""
-
-	case "$cpu" in
-		"C1000")
-			cpu_var="s"
-			cpu_type="s"
-			;;
-		"C1000DM")
-			cpu_var="q"
-			cpu_type="d"
-			;;
-		"C1200QM")
-			cpu_var="q"
-			cpu_type="q"
-			;;
-		*)
-			bad_msg "Can't find valid board data"
-			return 1;
-	esac
-
-	CPU_NAME="${cpu_base}${cpu_var}"
-	good_msg "Board CPU:\t${cpu_base}${cpu_type}"
-	return 0;
-}
-
-function get_dram() {
-	local dram=`hexdump -C $EEPROM_DEV | grep 00000090 | sed 's/.*|C[0-9][0-9QDM]*-\(D[0-9][0-9G]*\)-.*/\1/g'`
-	local dram_var=""
-
-	case "$dram" in
-		"D256")
-			dram_var="256m"
-			;;
-		"D512")
-			dram_var="512m"
-			;;
-		"D1G")
-			dram_var="1g"
-			;;
-		"D2G")
-			dram_var="2g"
-			;;
-		"D4G")
-			dram_var="4g"
-			;;
-		*)
-			bad_msg "Can't find valid board data"
-			return 1;
-	esac
-
-	DRAM_NAME="${dram_var}b"
-	good_msg "Board DRAM:\t$DRAM_NAME"
-	return 0;
-}
-
-function get_bootloader_file_name() {
-	get_cpu  || return 1;
-	get_dram || return 1;
-
-	echo ""
-
-	BOOTLOADER_FILE="cm-fx6-u-boot-${CPU_NAME}-${DRAM_NAME}"
+function find_bootloader_file() {
 	good_msg "Looking for boot loader image file: $BOOTLOADER_FILE"
 
 	if [ ! -s $BOOTLOADER_FILE ]; then
-		bad_msg "Can't find correct boot loader image file for the board"
+		bad_msg "Can't find boot loader image file for the board"
 		return 1;
 	fi
 
@@ -280,7 +214,7 @@ function error_exit() {
 echo -e "\n${UPDATER_BANNER}\n"
 
 check_utilities			|| error_exit 4;
-get_bootloader_file_name	|| error_exit 1;
+find_bootloader_file		|| error_exit 1;
 check_spi_flash			|| error_exit 2;
 check_bootloader_versions	|| exit 0;
 
