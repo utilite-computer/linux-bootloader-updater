@@ -218,7 +218,6 @@ function check_utilities() {
 	check_utility "flash_erase"	|| return 1;
 
 	good_msg "...Done"
-	echo ""
 	return 0;
 }
 
