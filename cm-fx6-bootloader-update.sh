@@ -56,6 +56,7 @@ function DD() {
 	return $?
 }
 
+EEPROM_DEV="/sys/bus/i2c/devices/2-0050/eeprom"
 MTD_DEV="mtd0"
 MTD_DEV_FILE="/dev/${MTD_DEV}"
 CPU_NAME=""
@@ -205,6 +206,18 @@ function check_bootloader() {
 	return 0;
 }
 
+function check_board() {
+	good_msg "Checking that board is CM-FX6 (Utilite)..."
+	local module=`hexdump -C $EEPROM_DEV | grep 00000080 | sed 's/.*|\(CM-FX6\).*/\1/g'`
+	if [ "$module" == "CM-FX6" ]; then
+		good_msg "...Done"
+		return 0;
+	fi;
+
+	bad_msg "This board is not a CM-FX6 (Utilite)!"
+	return 1;
+}
+
 function error_exit() {
 	bad_msg "Boot loader update failed!"
 	exit $1;
@@ -214,6 +227,7 @@ function error_exit() {
 echo -e "\n${UPDATER_BANNER}\n"
 
 check_utilities			|| error_exit 4;
+check_board			|| error_exit 3;
 find_bootloader_file		|| error_exit 1;
 check_spi_flash			|| error_exit 2;
 check_bootloader_versions	|| exit 0;
