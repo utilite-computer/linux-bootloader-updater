@@ -64,8 +64,12 @@ DRAM_NAME=""
 BOOTLOADER_FILE="cm-fx6-firmware"
 
 function find_bootloader_file() {
-	good_msg "Looking for boot loader image file: $BOOTLOADER_FILE"
+	read -p "Please input firmware file path (or press ENTER to use \"cm-fx6-firmware\"): " filepath
+	if [[ -n $filepath ]]; then
+		BOOTLOADER_FILE=`eval "echo $filepath"`
+	fi
 
+	good_msg "Looking for boot loader image file: $BOOTLOADER_FILE"
 	if [ ! -s $BOOTLOADER_FILE ]; then
 		bad_msg "Can't find boot loader image file for the board"
 		return 1;
