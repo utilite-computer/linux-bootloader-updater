@@ -2,7 +2,7 @@
 #
 # CompuLab CM-FX6 module boot loader update utility
 #
-# Copyright (C) 2013-2014 CompuLab, Ltd.
+# Copyright (C) 2013-2015 CompuLab, Ltd.
 # Author: Igor Grinberg <grinberg@compulab.co.il>
 #
 # This program is free software; you can redistribute it and/or modify
