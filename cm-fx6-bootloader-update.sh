@@ -56,6 +56,32 @@ function DD() {
 	return $?
 }
 
+function confirm() {
+	good_msg "$1"
+
+	select yn in "Yes" "No"; do
+		case $yn in
+			"Yes")
+				return 0;
+				;;
+			"No")
+				return 1;
+				;;
+			*)
+				case ${REPLY,,} in
+					"y"|"yes")
+						return 0;
+						;;
+					"n"|"no"|"abort")
+						return 1;
+						;;
+				esac
+		esac
+	done
+
+	return 1;
+}
+
 EEPROM_DEV="/sys/bus/i2c/devices/2-0050/eeprom"
 MTD_DEV="mtd0"
 MTD_DEV_FILE="/dev/${MTD_DEV}"
@@ -110,26 +136,7 @@ function check_bootloader_versions() {
 	good_msg "Current U-Boot version in SPI flash:\t$flash_version"
 	good_msg "New U-Boot version in file:\t\t$file_version ($file_size)"
 
-	good_msg "Proceed with the update?"
-	select yn in "Yes" "No"; do
-		case $yn in
-			"Yes")
-				return 0;
-				;;
-			"No")
-				return 1;
-				;;
-			*)
-				case ${REPLY,,} in
-					"y"|"yes")
-						return 0;
-						;;
-					"n"|"no"|"abort")
-						return 1;
-						;;
-				esac
-		esac
-	done
+	confirm "Proceed with the update?" && return 0;
 
 	return 1;
 }
