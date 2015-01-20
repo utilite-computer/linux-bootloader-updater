@@ -234,6 +234,37 @@ function error_exit() {
 	exit $1;
 }
 
+function env_set() {
+	local var=$1
+	local value=$2
+
+	fw_setenv $var "$value"
+
+	local match=`fw_printenv $var | grep -e "^$var=$value\$" | wc -l`
+	[ $match -eq 1 ] && return 0;
+
+	return 1;
+}
+
+function reset_environment() {
+	warn_msg "Resetting U-Boot environment will override any changes made to the environment!"
+	confirm "Reset U-Boot environment (recommended)?"
+	if [ $? -eq 1 ]; then
+		good_msg "U-boot environment will not be reset."
+		return 0;
+	fi
+
+	local bootcmd_new="env default -a && saveenv; reset"
+	env_set bootcmd "$bootcmd_new" && env_set bootdelay 0
+	if [[ $? -eq 0 ]]; then
+		good_msg "U-boot environment will be reset on restart."
+		return 0;
+	fi
+
+	bad_msg "U-Boot environment reset failed!"
+	return 1;
+}
+
 #main()
 echo -e "\n${UPDATER_BANNER}\n"
 
@@ -251,3 +282,6 @@ check_bootloader		|| error_exit 7;
 
 good_msg "Boot loader update succeeded!\n"
 
+reset_environment		|| exit 0;
+
+good_msg "Done!\n"
