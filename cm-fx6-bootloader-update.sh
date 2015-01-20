@@ -26,19 +26,19 @@ BOLD="\033[1m"
 GOOD="\033[32;1m"
 
 function good_msg() {
-	msg_string=$1
+	local msg_string=$1
 	msg_string="${msg_string:-...}"
 	echo -e "${GOOD}>>${NORMAL}${BOLD} ${msg_string} ${NORMAL}"
 }
 
 function bad_msg() {
-	msg_string=$1
+	local msg_string=$1
 	msg_string="${msg_string:-...}"
 	echo -e "${BAD}!!${NORMAL}${BOLD} ${msg_string} ${NORMAL}"
 }
 
 function warn_msg() {
-	msg_string=$1
+	local msg_string=$1
 	msg_string="${msg_string:-...}"
 	echo -e "${WARN}**${NORMAL}${BOLD} ${msg_string} ${NORMAL}"
 }
