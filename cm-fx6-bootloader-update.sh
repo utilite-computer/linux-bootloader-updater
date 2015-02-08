@@ -254,6 +254,12 @@ function reset_environment() {
 		return 0;
 	fi
 
+	check_utility "fw_setenv" && check_utility "fw_printenv"
+	if [[ $? -ne 0 ]]; then
+		bad_msg "Cannot reset environment."
+		return 1;
+	fi
+
 	local bootcmd_new="env default -a && saveenv; reset"
 	env_set bootcmd "$bootcmd_new" && env_set bootdelay 0
 	if [[ $? -eq 0 ]]; then
