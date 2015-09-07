@@ -15,8 +15,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-UPDATER_VERSION="2.2"
-UPDATER_VERSION_DATE="Feb 8 2015"
+UPDATER_VERSION="2.3-devel"
+UPDATER_VERSION_DATE="Aug 27 2015"
 UPDATER_BANNER="CompuLab CM-FX6 (Utilite) boot loader update utility ${UPDATER_VERSION} (${UPDATER_VERSION_DATE})"
 
 NORMAL="\033[0m"
@@ -125,7 +125,7 @@ function check_spi_flash() {
 
 function get_uboot_version() {
 	local file="$1"
-	grep -oazE "U-Boot [0-9]+\.[0-9]+.* \(... +[0-9]+ [0-9]+ - [0-9]+:[0-9]+:[0-9]+\)" "$file"
+	grep -oaE "U-Boot [0-9]+\.[0-9]+.* \(... +[0-9]+ [0-9]+ - [0-9]+:[0-9]+:[0-9]+\)" "$file"
 }
 
 function check_bootloader_versions() {
@@ -201,7 +201,7 @@ function check_bootloader() {
 	good_msg "Checking boot loader in the SPI flash..."
 
 	local test_file="${BOOTLOADER_FILE}.test"
-	local size=`du -bL $BOOTLOADER_FILE | cut -f1`
+	local size=$((`du -L $BOOTLOADER_FILE | cut -f1`*1024))
 
 	DD if=$MTD_DEV_FILE of=$test_file bs=$size count=1
 
