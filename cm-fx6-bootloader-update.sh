@@ -15,8 +15,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-UPDATER_VERSION="2.3"
-UPDATER_VERSION_DATE="Oct 18 2015"
+UPDATER_VERSION="2.4-devel"
+UPDATER_VERSION_DATE="Oct 28 2015"
 UPDATER_BANNER="CompuLab CM-FX6 (Utilite) boot loader update utility ${UPDATER_VERSION} (${UPDATER_VERSION_DATE})"
 
 NORMAL="\033[0m"
@@ -90,7 +90,7 @@ DRAM_NAME=""
 BOOTLOADER_FILE="cm-fx6-firmware"
 
 function find_bootloader_file() {
-	read -p "Please input firmware file path (or press ENTER to use \"cm-fx6-firmware\"): " filepath
+	read -e -p "Please input firmware file path (or press ENTER to use \"cm-fx6-firmware\"): " filepath
 	if [[ -n $filepath ]]; then
 		BOOTLOADER_FILE=`eval "echo $filepath"`
 	fi
